@@ -46,6 +46,43 @@
             border-radius: 4px;
             width: 80%; /* Make input wider */
         }
+
+        /* --- Flow Timer Styles --- */
+        #flow-timer {
+            margin-top: 2em;
+            padding: 1em;
+            border: 1px solid #eee; /* Subtle border */
+            border-radius: 8px;
+            background-color: #fff; /* White background for the timer section */
+        }
+
+        #flow-timer h2 {
+            font-size: 1.5em; /* Slightly smaller than main h1 */
+            margin-bottom: 0.5em;
+            color: #333;
+        }
+
+        #timer-display {
+            font-size: 2.5em; /* Large timer display */
+            font-weight: bold;
+            margin-bottom: 0.5em;
+            color: #2a2a2a;
+        }
+
+        #flow-timer button {
+            padding: 0.5em 1em;
+            margin: 0 0.5em;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background-color: #f0f0f0; /* Light grey button */
+            cursor: pointer;
+            font-size: 0.9em;
+        }
+
+        #flow-timer button:hover {
+            background-color: #e0e0e0; /* Slightly darker on hover */
+        }
+        /* --- End Flow Timer Styles --- */
     </style>
 </head>
 <body>
@@ -64,8 +101,18 @@
     <p>What are you grateful for today?</p>
     <input type="text" id="gratitudeInput" name="gratitude" size="50">
 
+    <hr> <!-- Separator before the timer -->
+    <!-- Flow Timer Section -->
+    <div id="flow-timer">
+        <h2>Flow Timer</h2>
+        <div id="timer-display">25:00</div>
+        <button id="start-pause-button">Start</button>
+        <button id="reset-button">Reset</button>
+    </div>
+    <!-- End Flow Timer Section -->
 
     <script>
+        // Original Date/Time function
         function updateDateTime() {
             const now = new Date();
             const dateTimeString = now.toLocaleString(); // Formats date and time based on locale
@@ -74,6 +121,97 @@
 
         // Update the date and time when the page loads
         updateDateTime();
+
+        // --- Flow Timer Logic ---
+        const timerDisplay = document.getElementById('timer-display');
+        const startPauseButton = document.getElementById('start-pause-button');
+        const resetButton = document.getElementById('reset-button');
+
+        let timerInterval = null;
+        let timeLeft = 25 * 60; // 25 minutes in seconds (default work)
+        let isPaused = true;
+        let isWorkSession = true; // Start with a work session
+
+        const workDuration = 25 * 60; // 25 minutes
+        const breakDuration = 5 * 60; // 5 minutes
+
+        function formatTime(seconds) {
+            const minutes = Math.floor(seconds / 60);
+            const remainingSeconds = seconds % 60;
+            return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
+        }
+
+        function updateDisplay() {
+            timerDisplay.textContent = formatTime(timeLeft);
+            // Update title based on timer state
+            if (!isPaused) {
+                 document.title = `${formatTime(timeLeft)} - ${isWorkSession ? 'Focus' : 'Break'}`;
+            } else if (timeLeft === (isWorkSession ? workDuration : breakDuration)) {
+                 document.title = `Flow Timer - ${isWorkSession ? 'Focus' : 'Break'} Ready`;
+            } else {
+                 document.title = `Paused - ${formatTime(timeLeft)}`;
+            }
+        }
+
+        function startTimer() {
+            if (timerInterval) clearInterval(timerInterval); // Clear existing interval if any
+            isPaused = false;
+            startPauseButton.textContent = 'Pause';
+            updateDisplay(); // Update display and title immediately on start
+            timerInterval = setInterval(() => {
+                if (timeLeft > 0) {
+                    timeLeft--;
+                    updateDisplay(); // Update display and title each second
+                } else {
+                    clearInterval(timerInterval);
+                    // Switch session
+                    const previousSession = isWorkSession ? 'Work' : 'Break';
+                    isWorkSession = !isWorkSession;
+                    timeLeft = isWorkSession ? workDuration : breakDuration;
+                    alert(previousSession === 'Work' ? "Time for a 5-minute break!" : "Break's over! Time for a 25-minute focus session.");
+                    // Reset to new session time, pause the timer
+                    isPaused = true;
+                    startPauseButton.textContent = 'Start';
+                    updateDisplay(); // Update display and title for the new session state
+                }
+            }, 1000);
+        }
+
+        function pauseTimer() {
+            isPaused = true;
+            startPauseButton.textContent = 'Start';
+            clearInterval(timerInterval);
+            updateDisplay(); // Update title when paused
+        }
+
+        function resetTimer(resetSessionType = true) {
+            clearInterval(timerInterval);
+            isPaused = true;
+            if (resetSessionType) {
+                isWorkSession = true; // Reset to work session
+            }
+            timeLeft = isWorkSession ? workDuration : breakDuration;
+            startPauseButton.textContent = 'Start';
+            updateDisplay();
+            document.title = "Flow Timer Ready"; // Reset page title completely
+        }
+
+        startPauseButton.addEventListener('click', () => {
+            if (isPaused) {
+                startTimer();
+            } else {
+                pauseTimer();
+            }
+        });
+
+        resetButton.addEventListener('click', () => {
+            resetTimer(true); // Full reset including session type
+        });
+
+        // Initial display setup
+        updateDisplay(); // Show initial time (e.g., 25:00)
+        document.title = "Flow Timer Ready"; // Set initial page title
+        // --- End Flow Timer Logic ---
     </script>
 </body>
 </html>
