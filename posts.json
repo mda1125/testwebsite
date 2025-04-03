@@ -8,5 +8,10 @@
     "title": "Second Post",
     "content": "Here's some more content for the second post.",
     "date": "2025-04-04"
-  }
+  },
+  {
+    "title": "Third Post",
+    "content": "Here's some more content for the third post.",
+    "date": "2025-04-04"
+  } 
 ]
