@@ -1,1 +1,22 @@
-Welcome
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Current Date and Time</title>
+</head>
+<body>
+    <h1>Welcome</h1>
+    <p>Current date and time:</p>
+    <p id="datetime"></p>
+
+    <script>
+        function updateDateTime() {
+            const now = new Date();
+            const dateTimeString = now.toLocaleString(); // Formats date and time based on locale
+            document.getElementById('datetime').textContent = dateTimeString;
+        }
+
+        // Update the date and time when the page loads
+        updateDateTime();
+    </script>
+</body>
+</html>
