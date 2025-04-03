@@ -2,10 +2,55 @@
 <html>
 <head>
     <title>Current Date and Time</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            padding: 2em;
+            max-width: 600px; /* Limit width for better readability */
+            margin: 2em auto; /* Center the content */
+            background-color: #f9f9f9; /* Light background */
+            color: #333; /* Darker text */
+            text-align: center; /* Center align text */
+        }
+        h1 {
+            font-size: 2em; /* Larger heading */
+            margin-bottom: 1em;
+            color: #1a1a1a;
+        }
+        p, input {
+            margin-bottom: 1em; /* Space below paragraphs and input */
+        }
+        img {
+            display: block; /* Allows margin auto to work */
+            margin: 1.5em auto; /* Center image and add vertical space */
+            max-width: 300px; /* Slightly smaller max-width */
+            height: auto;
+        }
+        hr {
+            border: 0;
+            height: 1px;
+            background: #ccc;
+            margin: 2em 0; /* More vertical space around horizontal rules */
+        }
+        #datetime {
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+        em {
+            color: #555; /* Slightly lighter color for emphasis text */
+        }
+        input[type="text"] {
+            padding: 0.5em;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            width: 80%; /* Make input wider */
+        }
+    </style>
 </head>
 <body>
     <h1>Breathe. You're Here Now</h1>
-    <img src="home.png" alt="Home Icon" style="max-width: 350px; height: auto;"> <!-- Adjusted image size -->
+    <img src="home.png" alt="Home Icon"> <!-- Removed inline style -->
     <p>Current date and time:</p>
     <p id="datetime"></p>
     <hr>
